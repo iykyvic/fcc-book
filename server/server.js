@@ -8,7 +8,7 @@ import favicon from 'serve-favicon'
 import logger from 'morgan'
 import Logger from 'js-logger'
 import bodyParser from 'body-parser'
-import https from 'https'
+import http from 'http'
 import helmet from 'helmet'
 import { database, graphqlSchema as schema } from './models'
 import Routes from './routes'
@@ -122,20 +122,11 @@ if (isDevMode) {
 
 database.on('error', () => Logger.info('connection error'))
 database.once('open', async () => {
-  try {
-    const options = isDevMode ? {
-      cert: fs.readFileSync(path.resolve(__dirname, 'ssl/cert.pem')),
-      key: fs.readFileSync(path.resolve(__dirname, 'ssl/key.pem'))
-    } : {}
-    const server = https.createServer(options, app)
+  const server = http.createServer(app)
 
-    return server
-      .on('listening', onListening.bind(null, server))
-      .on('error', onError).listen(port)
-  } catch (error) {
-    Logger.log(error.message)
-    return process.exit(1)
-  }
+  server.on('listening', onListening.bind(null, server)).on('error', onError)
+
+  server.listen(port)
 })
 
 export default app
