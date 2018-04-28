@@ -8,8 +8,7 @@
     "build:client": "webpack -p",
     "start:dev": "export NODE_ENV=development && nodemon ./server/server.js --exec babel-node",
     "start": "export NODE_ENV=production && node dist/server.js",
-    "lint": "standard",
-    "prestart": "npm run build:server && npm run build:client"
+    "lint": "standard"
   },
   "repository": {
     "type": "git",
