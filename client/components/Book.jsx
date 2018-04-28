@@ -1,7 +1,7 @@
 import React from 'react'
 import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card'
 import PropTypes from 'prop-types'
-import { withStyles } from 'material-ui/styles'
+import withStyles from 'material-ui/styles/withStyles'
 import Button from 'material-ui/Button'
 import Grid from 'material-ui/Grid'
 import Typography from 'material-ui/Typography'

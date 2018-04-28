@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
-import { withStyles } from 'material-ui/styles'
+import withStyles from 'material-ui/styles/withStyles'
 import BottomNavigation, { BottomNavigationAction } from 'material-ui/BottomNavigation'
 import BookIcon from 'material-ui-icons/LibraryBooks'
 import AccountCircle from 'material-ui-icons/AccountCircle'

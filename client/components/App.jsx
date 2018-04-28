@@ -50,98 +50,91 @@ export default withRouter(class App extends Component {
   }
 
   render () {
-    return <div>
-      <Query
-        query={GET_AUTH_STATUS}
-        children={({ data: { user: { _id } }, loading: loadingAuth }) => {
-          return <Loader
-            show={loadingAuth}
-            message='please wait'
-          >
-            <Query
-              query={_id ? GET_USER : GET_USER_IN_CLIENT}
-              variables={{ _id }}
-              children={({
-                data: { UserFindById: user } = { UserFindById: null },
-                loading: loadingUser
-              }) => {
-                const auth = user ? _id === user._id : false
+    return <Query
+      query={GET_AUTH_STATUS}
+      children={({ data: { user: { _id } }, loading: loadingAuth }) => {
+        return <Query
+          query={_id ? GET_USER : GET_USER_IN_CLIENT}
+          variables={{ _id }}
+          children={({
+            data: { UserFindById: user } = { UserFindById: null },
+            loading: loadingUser
+          }) => {
+            const auth = user ? _id === user._id : false
 
-                return <Loader
-                  show={loadingUser}
-                  message='please wait'
-                >
-                  <Nav
-                    title='FCC LIB'
-                    pageTitle='home'
-                    auth={auth}
-                    logout={this.logout}
+            return <Loader
+              show={loadingAuth || loadingUser}
+              message='please wait'
+            >
+              <Nav
+                title='FCC LIB'
+                pageTitle='home'
+                auth={auth}
+                logout={this.logout}
+                user={user}
+              />
+              <Switch>
+                <Route exact path='/' render={routerProps => <HomePage {...routerProps} />} />
+                <Route
+                  exact path='/login'
+                  render={routerProps => <LoginPage {...routerProps} />}
+                />
+                <Route exact path='/books' render={(routerProps) => <BooksPage
+                  {...routerProps}
+                  {...this.props}
+                  user={user}
+                  filter={{
+                    status: 'AVAILABLE'
+                  }}
+                  limit={8}
+                  page={1}
+                  sort='CREATORID__TITLE_ASC'
+                />} />
+                <Route exact path='/books/:id' render={(routerProps) => <BookPage
+                  {...routerProps}
+                  {...this.props}
+                  user={user}
+                />} />
+                {auth ? <Route exact path='/profile' render={
+                  (routerProps) => <ProfilePage {...routerProps} {...this.props} user={user} />
+                } /> : null}
+                {auth ? <Route exact path='/profile/books' render={
+                  (routerProps) => <UserBooksPage
+                    {...routerProps}
+                    {...this.props}
+                    user={user}
+                    filter={{ creatorId: user._id }}
+                    limit={8}
+                    page={1}
+                    sort='CREATORID__TITLE_ASC'
+                  />
+                } /> : null}
+                {auth ? <Route exact path='/profile/trades' render={
+                  (routerProps) => <RequestsPage {...routerProps} {...this.props} user={user} />
+                } /> : null}
+                {auth ? <Route exact path='/profile/books/:id' render={
+                  (routerProps) => <EditBookPage
+                    {...routerProps}
+                    {...this.props}
                     user={user}
                   />
-                  <Switch>
-                    <Route exact path='/' render={routerProps => <HomePage {...routerProps} />} />
-                    <Route
-                      exact path='/login'
-                      render={routerProps => <LoginPage {...routerProps} />}
-                    />
-                    <Route exact path='/books' render={(routerProps) => <BooksPage
-                      {...routerProps}
-                      {...this.props}
-                      user={user}
-                      filter={{
-                        status: 'AVAILABLE'
-                      }}
-                      limit={8}
-                      page={1}
-                      sort='CREATORID__TITLE_ASC'
-                    />} />
-                    <Route exact path='/books/:id' render={(routerProps) => <BookPage
-                      {...routerProps}
-                      {...this.props}
-                      user={user}
-                    />} />
-                    {auth ? <Route exact path='/profile' render={
-                      (routerProps) => <ProfilePage {...routerProps} {...this.props} user={user} />
-                    } /> : null}
-                    {auth ? <Route exact path='/profile/books' render={
-                      (routerProps) => <UserBooksPage
-                        {...routerProps}
-                        {...this.props}
-                        user={user}
-                        filter={{ creatorId: user._id }}
-                        limit={8}
-                        page={1}
-                        sort='CREATORID__TITLE_ASC'
-                      />
-                    } /> : null}
-                    {auth ? <Route exact path='/profile/trades' render={
-                      (routerProps) => <RequestsPage {...routerProps} {...this.props} user={user} />
-                    } /> : null}
-                    {auth ? <Route exact path='/profile/books/:id' render={
-                      (routerProps) => <EditBookPage
-                        {...routerProps}
-                        {...this.props}
-                        user={user}
-                      />
-                    } /> : null}
-                    <Route component={FourZeroFourPage} />
-                  </Switch>
-                  {_id ? <Query
-                    query={GET_APP_ERROR_STATUS}
-                    children={({ data: { error: appError } }) => {
-                      return <Snack
-                        anchorOrigin={{ vertical: 'center', horizontal: 'center' }}
-                        open={appError.error}
-                        message={appError.message}
-                        onExit={this.clearAppError.bind(null, appError.statusCode)}
-                      />
-                    }}
-                  /> : null}
-                </Loader>
-              }}
-            />
-          </Loader>
-        }} />
-    </div>
+                } /> : null}
+                <Route component={FourZeroFourPage} />
+              </Switch>
+              {_id ? <Query
+                query={GET_APP_ERROR_STATUS}
+                children={({ data: { error: appError } }) => {
+                  return <Snack
+                    anchorOrigin={{ vertical: 'center', horizontal: 'center' }}
+                    open={appError.error}
+                    message={appError.message}
+                    onExit={this.clearAppError.bind(null, appError.statusCode)}
+                  />
+                }}
+              /> : null}
+            </Loader>
+          }}
+        />
+      }} />
   }
 })

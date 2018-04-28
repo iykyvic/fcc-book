@@ -4,11 +4,12 @@
   "description": "fcc book app",
   "main": "./server/server.js",
   "scripts": {
-    "build": "export NODE_ENV=production && rimraf dist && webpack -p && babel server --out-dir dist/",
+    "build:server": "export NODE_ENV=production && rimraf dist && babel server --out-dir dist/",
+    "build:client": "webpack -p",
     "start:dev": "export NODE_ENV=development && nodemon ./server/server.js --exec babel-node",
     "start": "export NODE_ENV=production && node dist/server.js",
     "lint": "standard",
-    "prestart": "npm run build"
+    "prestart": "npm run build:server && npm run build:client"
   },
   "repository": {
     "type": "git",
@@ -76,7 +77,6 @@
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react-app": "^3.1.1",
-    "compression-webpack-plugin": "^1.1.11",
     "css-loader": "^0.28.11",
     "html-webpack-plugin": "^3.2.0",
     "mocha": "^5.1.0",
@@ -86,8 +86,10 @@
     "sass-loader": "^6.0.7",
     "standard": "^11.0.1",
     "style-loader": "^0.20.3",
+    "uglifyjs-webpack-plugin": "^1.2.5",
     "url-loader": "^1.0.1",
     "webpack": "^4.6.0",
+    "webpack-bundle-analyzer": "^2.11.1",
     "webpack-cli": "^2.0.14",
     "webpack-dev-middleware": "^3.1.2",
     "webpack-hot-middleware": "^2.21.2"
@@ -102,14 +104,6 @@
       "NODE_ENV",
       "HOST_NAME",
       "API_URL"
-    ],
-    "max-len": [
-      "warning",
-      80,
-      2,
-      {
-        "ignoreComments": true
-      }
     ]
   },
   "nodemonConfig": {

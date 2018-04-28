@@ -94,18 +94,11 @@ const Library = (props) => (
     </MuiThemeProvider>
   </BrowserRouter>
 )
-
-async function waitForCache (Persistor, ReactRender, Application, theme, client) {
-  await Persistor.restore()
-
-  return ReactRender(<Application
-    theme={theme}
-    client={Client}
-    persistor={Persistor}
-  />, document.getElementById('book'))
-}
-
-waitForCache(persistor, render, Library, createMuiTheme(darkBaseTheme), Client)
+persistor.restore().then(() => render(<Library
+  theme={createMuiTheme(darkBaseTheme)}
+  client={Client}
+  persistor={persistor}
+/>, document.getElementById('book')))
 
 module.exports.Snack = Snack
 export default App

@@ -1,12 +1,11 @@
 import React from 'react'
 import Button from 'material-ui/Button'
-import { withStyles } from 'material-ui/styles'
-import bg from '../../assets/img/404page.jpg'
+import withStyles from 'material-ui/styles/withStyles'
 
 const styles = theme => ({
   page: {
     backgroundColor: theme.palette.primary.main,
-    background: `url(${bg}) center center no-repeat`,
+    background: `url('https://www.osustech.edu.ng/staff/images/error.jpg') center center no-repeat`,
     backgroundSize: 'contain',
     height: 'calc(100vh - 80px)',
     display: 'flex',

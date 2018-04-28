@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { withStyles } from 'material-ui/styles'
+import withStyles from 'material-ui/styles/withStyles'
 import Img from 'react-image'
 import Loader from 'react-loader-advanced'
 import compose from 'recompose/compose'
@@ -55,9 +55,6 @@ class Nav extends Component {
     anchorEl: null
   }
   static styles = {
-    root: {
-      flexGrow: 1
-    },
     flex: {
       flex: 1
     },
@@ -67,6 +64,7 @@ class Nav extends Component {
       'align-items': 'center'
     },
     rightIcon: {
+      color: '#ffffff',
       marginLeft: 10
     },
     links: {
@@ -148,65 +146,63 @@ class Nav extends Component {
     )
 
     return (
-      <div className={classes.root}>
-        <AppBar position='static'>
-          <Toolbar>
-            <Typography variant='title' color='inherit' className={classes.flex}>
-              <Link className={classes.links} to='/'>{title} </Link>
-            </Typography>
-            { auth
-              ? <div className={classes.extra} >
-                <Hidden only={['xs', 'sm']}>
-                  <span className={classes.displayname}>
+      <AppBar position='static'>
+        <Toolbar>
+          <Typography variant='title' color='inherit' className={classes.flex}>
+            <Link className={classes.links} to='/'>{title} </Link>
+          </Typography>
+          { auth
+            ? <div className={classes.extra} >
+              <Hidden only={['xs', 'sm']}>
+                <span className={classes.displayname}>
                     Hi! {user.displayName.split(' ')[0]}
-                  </span>
-                </Hidden>
-                <LogoutToggle />
-                {history.location.pathname === '/profile' ? null : <UserAvatar
-                  alt={user.displayName}
-                  imageUrl={user.photos[0].value}
-                />}
-              </div> : LoginButton
-            }
-            <IconButton
-              className={classes.menuButton}
-              color='inherit'
-              aria-label='Menu'
-              aria-owns={open ? 'menu-appbar' : null}
-              aria-haspopup='true'
-              onClick={this.handleOpenMenu}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id='menu-appbar'
-              className={classes.menuAppbar}
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              open={open}
-              onClose={this.handleCloseMenu}
-            >
-              { auth && history.location.pathname !== '/profile'
-                ? <MenuItem onClick={this.handleCloseMenu.bind(null, '/profile')} className={classes.menuItem}>
-                  <AccountCircle className={classes.menuIcon} /> View Profile
-                </MenuItem>
-                : null
-              }
-
-              <MenuItem onClick={this.handleCloseMenu.bind(null, '/books')} className={classes.menuItem}>
-                <BookIcon className={classes.menuIcon} /> Find Books
+                </span>
+              </Hidden>
+              <LogoutToggle />
+              {history.location.pathname === '/profile' ? null : <UserAvatar
+                alt={user.displayName}
+                imageUrl={user.photos[0].value}
+              />}
+            </div> : LoginButton
+          }
+          <IconButton
+            className={classes.menuButton}
+            color='inherit'
+            aria-label='Menu'
+            aria-owns={open ? 'menu-appbar' : null}
+            aria-haspopup='true'
+            onClick={this.handleOpenMenu}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Menu
+            id='menu-appbar'
+            className={classes.menuAppbar}
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right'
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right'
+            }}
+            open={open}
+            onClose={this.handleCloseMenu}
+          >
+            { auth && history.location.pathname !== '/profile'
+              ? <MenuItem onClick={this.handleCloseMenu.bind(null, '/profile')} className={classes.menuItem}>
+                <AccountCircle className={classes.menuIcon} /> View Profile
               </MenuItem>
-            </Menu>
-          </Toolbar>
-        </AppBar>
-      </div>
+              : null
+            }
+
+            <MenuItem onClick={this.handleCloseMenu.bind(null, '/books')} className={classes.menuItem}>
+              <BookIcon className={classes.menuIcon} /> Find Books
+            </MenuItem>
+          </Menu>
+        </Toolbar>
+      </AppBar>
     )
   }
 }

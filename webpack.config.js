@@ -1,8 +1,9 @@
 const env = require('dotenv')
 const webpack = require('webpack')
 const path = require('path')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const CompressionPlugin = require('compression-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 env.config()
 const { NODE_ENV, HOST_NAME } = process.env
@@ -10,7 +11,7 @@ const isDevMode = NODE_ENV === 'development'
 
 const config = {
   mode: NODE_ENV,
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   entry: './client/index.jsx',
   output: {
     filename: 'bundle.js',
@@ -43,17 +44,11 @@ const config = {
       HOST_NAME: JSON.stringify(`${HOST_NAME}`),
       NODE_ENV: JSON.stringify(`${NODE_ENV}`)
     }),
+    new UglifyJsPlugin(),
     new HtmlWebpackPlugin({
-      title: 'FCC STOCK',
+      title: 'FCC BOOK',
       template: './server/public/index.html',
       filename: path.resolve(__dirname, 'dist/public/index.html')
-    }),
-    new CompressionPlugin({
-      asset: '[path].gz[query]',
-      algorithm: 'gzip',
-      test: /\.js$|\.css$|\.html$/,
-      threshold: 10240,
-      minRatio: 0.8
     })
   ],
 
@@ -65,7 +60,11 @@ if (isDevMode) {
     config.entry,
     'webpack-hot-middleware/client?reload=true&quiet=true'
   ]
-  config.plugins.push(new webpack.HotModuleReplacementPlugin())
+  config.plugins = [
+    ...config.plugins,
+    new webpack.HotModuleReplacementPlugin(),
+    new BundleAnalyzerPlugin()
+  ]
 }
 
 module.exports = config

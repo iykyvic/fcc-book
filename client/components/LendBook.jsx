@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { withStyles } from 'material-ui/styles'
+import withStyles from 'material-ui/styles/withStyles'
 import { Mutation } from 'react-apollo'
 import Loader from 'react-loader-advanced'
 import Dialog, {

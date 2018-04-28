@@ -1,6 +1,5 @@
 import { config } from 'dotenv'
 import debug from 'debug'
-import fs from 'fs'
 import path from 'path'
 import express from 'express'
 import graphqlHTTP from 'express-graphql'
@@ -110,14 +109,22 @@ app.use('/graphql', getUser, graphqlHTTP({
 if (isDevMode) {
   devMiddleware(app)
 } else {
-  app.get('*.js', (req, res, next) => {
-    req.url = `${req.url}.gz`
-    res.set('Content-Encoding', 'gzip')
-    next()
+  app.use('*', (req, res) => {
+    res.set('content-type', 'text/html')
+    return res.send(`<!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <title>FCC BOOK</title>
+        <meta name="viewport" content="width=device-width" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+      </head>
+      <body>
+        <div id="book"></div>
+        <script type="text/javascript" src="/public/assets/bundle.js"></script>
+      </body>
+    </html>
+    `)
   })
-
-  app.use('*', (req, res) => res
-    .sendFile(path.resolve(__dirname, 'public/index.html')))
 }
 
 database.on('error', () => Logger.info('connection error'))

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { withStyles } from 'material-ui/styles'
+import withStyles from 'material-ui/styles/withStyles'
 import { Query } from 'react-apollo'
 import Grid from 'material-ui/Grid'
 import PropTypes from 'prop-types'
